@@ -1,4 +1,3 @@
-import { assets } from "@/assets/assets";
 import { font } from "@/lib/font";
 import {
   LayoutIcon,
@@ -8,6 +7,7 @@ import {
 } from "@radix-ui/react-icons";
 import { NavLink } from "../navlink";
 import { auth } from "@/auth";
+import Image from "next/image";
 const AdminSidebar = async () => {
   const session = await auth();
   const user = {
@@ -43,10 +43,19 @@ const AdminSidebar = async () => {
       className={`${font.className} flex flex-col items-center border-r-4 max-w-13 md:max-w-60 pt-8 w-full border-red-500/30 gap-2 h-[calc(100vh-64px)] mt-12`}
     >
       <div>
-        <img
+        {/* <img
           src={user.profile_img || "A"}
           alt="user"
           className="rounded-full h-9 md:h-14 w-9 md:w-14 mx-auto"
+        /> */}
+
+        <Image
+          src={user.profile_img || "/avatar.png"}
+          alt="user"
+          fill
+          className="rounded-full object-cover"
+          sizes="56px"
+          priority
         />
         <p className="font-normal text-base max-md:hidden my-3">
           {user.firstname}

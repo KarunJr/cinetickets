@@ -6,15 +6,11 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { useSearchParams } from "next/navigation";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { font } from "@/lib/font";
 
 const ErrorPage = () => {
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error");
-
   return (
     <div className={`${font.className} h-screen flex justify-center items-center w-full`}>
       <Card className="max-w-md w-full">

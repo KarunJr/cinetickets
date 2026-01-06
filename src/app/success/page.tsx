@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import SuccessResult, { PaymentInfoIF } from "@/components/payment/SuccessResult";
+import { PaymentInfoIF } from "@/components/payment/SuccessResult";
 import { connectToDatabase } from "@/lib/db";
 import Booking, { Status } from "@/models/booking.model";
 import Show from "@/models/show.model";

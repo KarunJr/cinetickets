@@ -40,7 +40,7 @@ const LoginPage = () => {
               variant={"link"}
               size={"sm"}
             >
-              Don't you have an acount?
+              Don&apos;t you have an acount?
             </Button>
           </Link>
         </CardFooter>

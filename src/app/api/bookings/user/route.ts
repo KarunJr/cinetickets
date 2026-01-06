@@ -3,7 +3,7 @@ import { getUserBookings } from "@/lib/controllers/booking.controller";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const session: Session | null = await auth();
     if (!session)
@@ -22,10 +22,11 @@ export async function GET(req: Request) {
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET error in /api/bookings/user: ", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message: error.message || "Internal server error!" },
+      { success: false, message },
       { status: 500 }
     );
   }

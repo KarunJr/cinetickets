@@ -1,8 +1,8 @@
 "use client";
 
 import { assets } from "@/assets/assets";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { ClockIcon } from "@radix-ui/react-icons";
 import Loading from "@/components/loading";
 import { hourFormat } from "@/lib/timeFormat";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext";
 import EsewaDialog from "@/components/movie-section/EsewaDialog";
 import Loader from "@/components/movie-section/Loader";
+import Image from "next/image";
 
 export interface selectedTime {
   time: string;
@@ -36,10 +37,11 @@ const SeatLayout = () => {
   const [selectedTime, setSelectedTime] = useState<selectedTime | null>(null);
   const [show, setShow] = useState<Show | null>(null);
   const [occupiedSeats, setOccupiedSeats] = useState<string[]>([]);
-  const [lockedSeats, setLockedSeats] = useState<string[]>([]);
+  // const [lockedSeats, setLockedSeats] = useState<string[]>([]); // If anything goes wrong uncomment this and goto line 113
   const [showPrice, setShowPrice] = useState<number>(0);
   const [loading, setLoading] = useState(false);
-  const getShow = async () => {
+
+  const getShow = useCallback(async () => {
     try {
       const response = await fetch(`/api/shows/${id}`, { method: "GET" });
       const data = await response.json();
@@ -50,9 +52,22 @@ const SeatLayout = () => {
     } catch (error) {
       console.error("Error in getShow():", error);
     }
-  };
+  }, [id])
 
-  const getOccupiedSeats = async () => {
+  /*const getShow = async () => {
+    try {
+      const response = await fetch(`/api/shows/${id}`, { method: "GET" });
+      const data = await response.json();
+
+      if (data.success) {
+        setShow({ dateTime: data.showDateTime });
+      }
+    } catch (error) {
+      console.error("Error in getShow():", error);
+    }
+  };*/
+
+  const getOccupiedSeats = useCallback(async () => {
     if (!selectedTime?.showId) return;
     setLoading(true)
     try {
@@ -72,7 +87,29 @@ const SeatLayout = () => {
     } finally {
       setLoading(false)
     }
-  };
+  }, [selectedTime])
+
+  /*const getOccupiedSeats = async () => {
+    if (!selectedTime?.showId) return;
+    setLoading(true)
+    try {
+      const response = await fetch(
+        `/api/bookings/seats/${selectedTime?.showId}`
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        setOccupiedSeats(data.occupiedSeats);
+        setShowPrice(data.showPrice);
+      } else {
+        setShowPrice(data.showPrice);
+      }
+    } catch (error) {
+      console.error("Error in getOccupiedSeats():", error);
+    } finally {
+      setLoading(false)
+    }
+  };*/
 
   const groupRows = [
     ["A", "B"],
@@ -109,14 +146,11 @@ const SeatLayout = () => {
             <button
               key={seatId}
               onClick={() => handleSeatClick(seatId)}
-              className={`h-8 w-8 rounded border border-red-500 cursor-pointer ${selectedSeat.includes(seatId) && "bg-red-600 text-white"
-                }
-              ${occupiedSeats.includes(seatId) && "bg-gray-500 text-white"} 
-              ${lockedSeats.includes(seatId) && "bg-yellow-400 text-white"}
-              `}
-              disabled={
-                occupiedSeats.includes(seatId) || lockedSeats.includes(seatId)
-              }
+              className={`h-8 w-8 rounded border border-red-500 cursor-pointer ${selectedSeat.includes(seatId) && "bg-red-600 text-white"}
+              ${occupiedSeats.includes(seatId) && "bg-gray-500 text-white"}`}
+              //${lockedSeats.includes(seatId) && "bg-yellow-400 text-white"} //if anything goes wrong add this on className
+              disabled={occupiedSeats.includes(seatId)}
+            // || lockedSeats.includes(seatId) //if anything goes wrong add this on disabled as OR operator
             >
               {seatId}
             </button>
@@ -137,7 +171,7 @@ const SeatLayout = () => {
 
   useEffect(() => {
     getShow();
-  }, []);
+  }, [getShow]);
 
   useEffect(() => {
     if (selectedTime) {
@@ -145,7 +179,7 @@ const SeatLayout = () => {
       setSelectedSeat([]);
       getOccupiedSeats();
     }
-  }, [selectedTime]);
+  }, [selectedTime, getOccupiedSeats]);
 
 
 
@@ -225,7 +259,13 @@ const SeatLayout = () => {
         {/* Seat Layout */}
         <div className="flex flex-1 items-center relative flex-col gap-2">
           <h1 className="text-2xl font-semibold">Select your seat</h1>
-          <img src={assets.screenImage.src} alt="screen" className="" />
+          {/* <img src={assets.screenImage.src} alt="screen" className="" /> */}
+          <Image
+            src={assets.screenImage}
+            alt="screen"
+            className=""
+            priority
+          />
           <h1 className="text-sm font-normal text-gray-400">SCREEN SIDE</h1>
 
           <div className="flex flex-col mt-10 text-gray-500 text-sm items-center">

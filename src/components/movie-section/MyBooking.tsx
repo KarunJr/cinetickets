@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { pdf } from "@react-pdf/renderer"
 import TicketPDF from "./TicketPDF";
 import Loader from "./Loader";
+import Image from "next/image";
 
 interface User {
   name: string;
@@ -93,10 +94,10 @@ const BookingDetails = () => {
   }
 
   useEffect(() => {
-    if (user) {
+    if (user && bookings.length === 0) {
       getMyBookings();
     }
-  }, [user]);
+  }, [user, bookings.length]);
   return (
     <>
       <Loader loading={loading} />
@@ -114,11 +115,17 @@ const BookingDetails = () => {
                   className="flex flex-col md:flex-row justify-between border border-gray-500 px-3 py-4 rounded-md shadow-xl"
                 >
                   <div className="flex flex-col md:flex-row">
-                    <img
-                      src={image_base_url + item.show.movie.poster_path}
-                      alt="poster"
-                      className="max-w-45 object-cover h-auto aspect-video rounded "
-                    />
+                    <div className="w-[140px] h-[180px] relative shrink-0">
+                      <Image
+                        src={image_base_url + item.show.movie.poster_path}
+                        alt="poster"
+                        fill
+                        className="object-cover rounded-md"
+                        sizes="140px"
+                      />
+                    </div>
+
+
 
                     <div className="flex flex-col p-4 gap-2">
                       <p className="text-lg font-semibold">

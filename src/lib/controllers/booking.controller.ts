@@ -1,13 +1,11 @@
 import { Types } from "mongoose";
 import { connectToDatabase } from "../db";
-import Show, { SeatStatus } from "@/models/show.model";
+import Show from "@/models/show.model";
 import "@/models/movie.model";
 import Booking, { IBookingSchema, Status } from "@/models/booking.model";
 import { Session } from "next-auth";
-import User from "@/models/user.model";
 import { DefaultReturn } from "./admin.controller";
 import { inngest } from "@/inngest/client";
-
 
 export const checkSeatAvailability = async (
   showId: Types.ObjectId,
@@ -65,7 +63,7 @@ export const createBooking = async ({
       return { success: false, message: "No movie was found" };
     }
 
-    const booking = await Booking.create({
+    await Booking.create({
       user: session.user.id,
       show: showId,
       amount: amount,
@@ -85,14 +83,16 @@ export const createBooking = async ({
     // showDetails.markModified("occupiedSeats");
 
     // await showDetails.save();
-    
+
     return { success: true, message: "Booked successfully!" };
     // return { success: true, message: "Seat locked!", booking };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in createBooking():", error);
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
     return {
       success: false,
-      message: error.message || "Soemthing went wrong!",
+      message,
     };
   }
 };
@@ -125,11 +125,13 @@ export const getOccupiedSeats = async (
       occupiedSeats,
       showPrice: show.showPrice,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in getOccupiedSeats():", error);
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
     return {
       success: false,
-      message: error.message || "Soemthing went wrong!",
+      message,
     };
   }
 };
@@ -162,11 +164,13 @@ export const getUserBookings = async (
       message: "All the booking made by user are fetched.",
       bookings,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in getUserBookings(): ", error);
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };

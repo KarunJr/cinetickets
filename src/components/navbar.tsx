@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { font } from "@/lib/font";
-import { Button } from "./ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";

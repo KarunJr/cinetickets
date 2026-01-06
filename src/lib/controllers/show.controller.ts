@@ -32,11 +32,13 @@ export const getNowPlayingMovies =
       } else {
         return { success: false, message: "Failed to fetch the movies" };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log("Error in getNowPlayingMovies(): ", error);
+      const message =
+        error instanceof Error ? error.message : "Soemthing went wrong!";
       return {
         success: false,
-        message: error.message || "Something went wrong!",
+        message,
       };
     }
   };
@@ -149,11 +151,13 @@ export const addShow = async ({
     }
 
     return { success: true, message: "Movie added successfully." };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log("Error in addShow(): ", error);
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };
@@ -183,11 +187,13 @@ export const getAllShows = async (): Promise<getAllShowsResult> => {
       message: "All movies are listed!",
       uniqueShows: Array.from(uniqueShows),
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in getAllShows(): ", error);
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };
@@ -255,11 +261,13 @@ export const getSingleShow = async (
       dateTime: dateTime,
       movie: movie,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in getSingleShows(): ", error);
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };

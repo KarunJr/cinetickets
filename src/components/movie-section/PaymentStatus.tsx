@@ -2,6 +2,7 @@ import { PaymentInfoIF } from "../payment/SuccessResult";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { font } from "@/lib/font";
+import Image from "next/image";
 
 
 
@@ -26,7 +27,16 @@ const PaymentStatus = ({
     >
       <div className="border p-4 shadow-xl bg-white rounded-md space-y-3">
         <h1 className="font-bold my-4 text-center">{heading}</h1>
-        <img src={image} alt="" className="max-w-30 mx-auto" />
+        {/* <img src={image} alt="" className="max-w-30 mx-auto" /> */}
+        <div className="w-[120px] h-[120px] mx-auto relative">
+          <Image
+            src={image}
+            alt={heading}
+            fill
+            className="object-contain"
+            sizes="120px"
+          />
+        </div>
         <p className="text-sm text-center">{message}</p>
 
         {paymentInfo && (

@@ -21,7 +21,7 @@ export const addFavourites = async ({
     const user = await User.findById(session.user.id);
     if (!user) return { success: false, message: "User not found!" };
 
-    const fav = await Favourite.findOne({ user: user._id });
+    await Favourite.findOne({ user: user._id });
 
     await Favourite.findOneAndUpdate(
       { user: session?.user.id },
@@ -29,9 +29,14 @@ export const addFavourites = async ({
       { upsert: true, new: true }
     );
     return { success: true, message: "Movie added successfully" };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in addFavourites():", error);
-    return { success: false, message: "Session not found!" };
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
+    return {
+      success: false,
+      message,
+    };
   }
 };
 
@@ -51,11 +56,13 @@ export const getAllFavourites = async (
     if (!favourites) return { success: false, message: "No favourties!" };
 
     return { success: true, message: "Favourites fetched!", favourites };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in getAllFavourites():", error);
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };
@@ -84,11 +91,13 @@ export const deleteFavourites = async ({
       success: true,
       message: "Removed from favourites",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in deleteFavourites():", error);
+    const message =
+      error instanceof Error ? error.message : "Soemthing went wrong!";
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };

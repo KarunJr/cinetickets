@@ -12,10 +12,11 @@ export async function GET() {
     } else {
       return NextResponse.json({ success: false, message: result.message }, { status: 400 });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET error in /api/admin/shows:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message: error.message || "Internal server error!" },
+      { success: false, message },
       { status: 500 }
     );
   }

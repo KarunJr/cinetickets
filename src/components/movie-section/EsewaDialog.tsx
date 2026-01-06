@@ -16,6 +16,7 @@ import { useAppContext } from "@/context/AppContext";
 import { v4 as uuidv4 } from "uuid";
 import SeatError from "./SeatError";
 import Loader from "./Loader";
+import Image from "next/image";
 
 interface EsewaDialogProps {
   selectedSeats: string[];
@@ -256,7 +257,14 @@ const EsewaDialog = ({
                   variant={"show"}
                   type="submit"
                 >
-                  <img src="/esewa.png" alt="" className="max-w-30" />
+                  {/* <img src="/esewa.png" alt="esewa" className="max-w-30" /> */}
+                  <Image
+                    src="/esewa.png"
+                    alt="esewa"
+                    width={120}
+                    height={40}
+                    className="object-contain"
+                  />
                 </Button>
               </form>
             </div>

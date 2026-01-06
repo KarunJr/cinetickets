@@ -16,10 +16,11 @@ export async function DELETE (req: Request) {
     }else{
       return NextResponse.json({ message: result.message }, { status: 400 });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET error in /api/favourites/delete: ", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { message: error.message || "Internal server error!" },
+      { success: false, message },
       { status: 500 }
     );
   }

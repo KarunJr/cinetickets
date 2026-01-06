@@ -1,8 +1,7 @@
 "use client";
 
 import PaymentStatus from "@/components/movie-section/PaymentStatus";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export interface PaymentInfoIF {
   product_code: string;
@@ -15,22 +14,18 @@ export interface PaymentInfoIF {
 }
 
 const SuccessResult = ({ paymentInfo }: { paymentInfo: PaymentInfoIF }) => {
-  
-  const changePaymentStatus = async () => {
-    const response = await fetch("/api/payment/verify-success", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ transaction_uuid: paymentInfo?.transaction_uuid }),
-    });
-  };
 
   useEffect(() => {
-    if (paymentInfo && paymentInfo.transaction_code) {
-      changePaymentStatus();
-    }
+    if (!(paymentInfo && paymentInfo.transaction_code)) return;
+    (async () => {
+      await fetch("/api/payment/verify-success", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transaction_uuid: paymentInfo?.transaction_uuid }),
+      });
+    })();
   }, [paymentInfo]);
+  
   return (
     <div>
       <PaymentStatus

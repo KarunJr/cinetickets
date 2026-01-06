@@ -66,7 +66,7 @@ export const MovieGallery = ({ movies, image_base_url }: MovieGalleryProps) => {
             {new Date(movie.release_date).getFullYear()} •{" "}
             {movie.genres
               .slice(0, 2)
-              .map((genre: any) => genre.name)
+              .map((genre: Genre) => genre.name)
               .join(" | ")}{" "}
             • {timeFormat(movie.runtime)}
           </p>

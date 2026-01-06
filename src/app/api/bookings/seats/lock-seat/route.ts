@@ -77,15 +77,11 @@ export async function POST(req: Request) {
     //   NX: true,
     //   EX: 300,
     // });
-
-    return NextResponse.json(
-      { success: true, message: "Seat locked" },
-      { status: 200 }
-    );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("POST error /api/bookings/seats/lock-seat:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message: error.message || "Something went wrong!" },
+      { success: false, message },
       { status: 500 }
     );
   }

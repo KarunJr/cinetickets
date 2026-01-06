@@ -17,30 +17,28 @@ const FailurePage = () => {
             router.replace("/");
         }
     }, [router, tuuid]);
-    if (!tuuid) return null;
-    const changePaymentStatus = async () => {
-        try {
-            const response = await fetch("/api/payment/verify-failure", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ tuuid: tuuid }),
-            });
-            const data = await response.json();
-            if (data.success) {
-                toast.success(data.message);
-            }
-        } catch (error) {
-            console.error("Error in changePaymentStatus():", error);
-        }
-    };
+
 
     useEffect(() => {
-        if (user) {
-            changePaymentStatus();
-        }
-    }, [user]);
+        if (!user || !tuuid) return
+        (async () => {
+            try {
+                const response = await fetch("/api/payment/verify-failure", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tuuid }),
+                });
+                const data = await response.json();
+                if (data.success) {
+                    toast.success(data.message)
+                };
+            } catch (error) {
+                console.error(error);
+            }
+        })();
+    }, [user, tuuid]);
+
+    if (!tuuid) return null;
     return (
         <div>
             <PaymentStatus

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const movieId = await params;
@@ -33,11 +33,12 @@ https://api.themoviedb.org/3/movie/${movieId.id}/videos`,
       { success: false, message: "Can't find the trailer. Sorry" },
       { status: 400 }
     );
-  } catch (error: any) {
-    console.error("Error:", error);
+  } catch (error: unknown) {
+    console.error("Error in /api/watch-trailer/[id]:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message: error.message || "Something went wrong!" },
-      { status: 400 }
+      { success: false, message },
+      { status: 500 }
     );
   }
 }

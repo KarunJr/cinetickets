@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Title from "./title";
-import { dummyBookingData } from "@/assets/assets";
 import { BookingData } from "../movie-section/MyBooking";
 import AdminLoading from "./loading";
 import { font } from "@/lib/font";

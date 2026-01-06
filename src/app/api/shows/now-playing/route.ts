@@ -19,9 +19,13 @@ export async function GET() {
         { status: 400 }
       );
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("GET /api/shows/now-playing error:", error);
-    return NextResponse.json({ error }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Internal server error!";
+    return NextResponse.json(
+      { success: false, message },
+      { status: 500 }
+    );
   }
 }
 
@@ -37,10 +41,11 @@ export async function POST(req: Request) {
     } else {
       return NextResponse.json({ success: false, message: result.message }, { status: 400 });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("POST /api/shows/now-playing error:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { message: error.message || "Internal server error" },
+      { success: false, message },
       { status: 500 }
     );
   }

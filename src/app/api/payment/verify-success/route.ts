@@ -65,10 +65,11 @@ export async function POST(req: Request) {
       { success: true, message: "Payment status changed." },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("POST error in /api/payment/verify-success: ", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: true, message: error.message || "Internal server error!" },
+      { success: false, message },
       { status: 500 }
     );
   }

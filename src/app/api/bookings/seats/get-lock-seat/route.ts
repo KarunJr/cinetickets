@@ -1,7 +1,7 @@
 import { redis } from "@/lib/redis";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, res: Response) {
+export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
 
@@ -19,10 +19,11 @@ export async function GET(req: Request, res: Response) {
     const lockedSeats = keys.map((key) => key.split(":")[3]);
 
     return NextResponse.json({ success: true, lockedSeats });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET error /api/bookings/seats/get-lock-seat:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message: error.message || "Something went wrong!" },
+      { success: false, message },
       { status: 500 }
     );
   }

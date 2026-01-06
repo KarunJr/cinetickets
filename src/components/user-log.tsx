@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
-import getUser from "@/hooks/getUser";
+import { useUser } from "@/hooks/getUser";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +14,7 @@ import { font } from "@/lib/font";
 import { signOut } from "next-auth/react";
 import { FaUser } from "react-icons/fa";
 const UserStatus = () => {
-  const user = getUser();
+  const user = useUser();
   return (
     <div>
       {user ? (
@@ -37,7 +37,7 @@ const UserStatus = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              { user.role === "admin" && 
+              {user.role === "admin" &&
                 <DropdownMenuItem>
                   <Link href={"/admin"}>
                     Admin

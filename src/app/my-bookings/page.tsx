@@ -1,5 +1,3 @@
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
 import { Metadata } from "next";
 import BookingDetails from "@/components/movie-section/MyBooking";
 

@@ -26,10 +26,11 @@ export async function GET() {
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET error in /api/favourites/: ", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { message: error.message || "Internal server error!" },
+      { success: false, message },
       { status: 500 }
     );
   }

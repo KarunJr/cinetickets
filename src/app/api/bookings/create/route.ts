@@ -56,10 +56,11 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log("POST error in /api/bookings/create: ", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message: error.message || "Internal server error!" },
+      { success: false, message },
       { status: 500 }
     );
   }

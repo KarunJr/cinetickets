@@ -14,10 +14,11 @@ export async function GET() {
     } else{
       return NextResponse.json({ message: result.message, success: false }, {status: 400});
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET /api/shows error:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { message: error.message || "Internal server error" },
+      { success: false, message },
       { status: 500 }
     );
   }

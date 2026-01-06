@@ -50,10 +50,11 @@ export async function POST(req: Request) {
     );
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("POST error in /api/initiate-payment:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { message: error.message || "Server Error" },
+      { success: false, message },
       { status: 500 }
     );
   }

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Movie } from "../movie-section/MovieGallery";
 import Title from "./title";
-import { dummyShowsData } from "@/assets/assets";
 import { font } from "@/lib/font";
 import { fullDateFormat, shortDateFormat } from "@/lib/timeFormat";
 import AdminLoading from "./loading";

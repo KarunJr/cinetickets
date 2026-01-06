@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const { showId, seats, userId } = await req.json();
 
-    let unlockedSeats = [];
+    const unlockedSeats = [];
     for (const seat of seats) {
       const key = `show:${showId}:seat:${seat}`;
       const lockedBy = await redis.get(key);
@@ -36,10 +36,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true, message: `Seat unlocked: ${unlockedSeats.join(", ")}` });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET error /api/bookings/seats/unlock-seat:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message: error.message || "Something went wrong!" },
+      { success: false, message },
       { status: 500 }
     );
   }

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Title from "./title";
-import { dummyShowsData } from "@/assets/assets";
 import { Movie } from "../movie-section/MovieGallery";
 import AdminLoading from "./loading";
 import { font } from "@/lib/font";
@@ -12,6 +11,7 @@ import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { DeleteIcon } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
+import Image from "next/image";
 
 // interface DateTimeSelection{
 //   date: string,
@@ -20,7 +20,7 @@ import { useAppContext } from "@/context/AppContext";
 
 const AddShows = () => {
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
-  const [selectedMovie, setSelectedMovie] = useState<number | null>(null);
+  const [selectedMovie, setSelectedMovie] = useState<string | null>(null);
   const [dateTimeSelection, setDateTimeSelection] = useState<
     Record<string, string[]>
   >({});
@@ -67,7 +67,7 @@ const AddShows = () => {
     setDateTimeSelection((prev) => {
       const filteredTimes = prev[date].filter((t) => t !== time);
       if (filteredTimes.length === 0) {
-        const { [date]: _, ...rest } = prev;
+        const { [date]: _ignored, ...rest } = prev;
         return rest;
       }
 
@@ -150,10 +150,19 @@ const AddShows = () => {
               onClick={() => setSelectedMovie(movie.id)}
             >
               <div className="relative overflow-hidden rounded-md w-full">
-                <img
+                {/* <img
                   src={image_base_url + movie.poster_path}
                   alt="poster"
                   className="w-full object-cover brightness-90"
+                /> */}
+
+                <Image
+                  src={image_base_url + movie.poster_path}
+                  alt="poster"
+                  className="w-full object-cover brightness-90"
+                  width={500} // You can adjust the width depending on the size you need
+                  height={750} // Adjust the height to match the aspect ratio
+                  priority // This will make the image load faster (good for above-the-fold images)
                 />
                 <div className="flex gap-2 justify-between absolute bottom-0 left-0 bg-white/5 backdrop-blur-md p-2 w-full">
                   <p className="text-sm flex items-center gap-1 text-white/80">

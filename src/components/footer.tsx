@@ -1,6 +1,5 @@
 import { font } from "@/lib/font";
 import Link from "next/link";
-import LinkedIn from "../../public/linkedin.svg"
 import Image from "next/image";
 const Footer = () => {
   return (
@@ -11,7 +10,13 @@ const Footer = () => {
         <div className="space-y-3">
           <h1 className="text-xl font-semibold">For Booking</h1>
           <div className="flex gap-3">
-            <img src="/phone.svg" alt="phone" className="h-5 w-5" />
+            {/* <img src="/phone.svg" alt="phone" className="h-5 w-5" /> */}
+            <Image
+              src="/phone.svg"
+              alt="phone"
+              width={20}
+              height={20}
+            />
             <p className="text-xm font-normal"> +977-9840418283</p>
           </div>
         </div>
@@ -54,8 +59,23 @@ const Footer = () => {
         <div className="space-y-3">
           <h1 className="text-xl font-semibold">Payment Partner</h1>
           <div className="flex gap-4 items-center">
-            <img src="/esewa.png" alt="esewa" className="w-26 h-10" />
-            <img src="/khalti.png" alt="khalti" className="w-26 h-10" />
+            {/* <img src="/esewa.png" alt="esewa" className="w-26 h-10" />
+            <img src="/khalti.png" alt="khalti" className="w-26 h-10" /> */}
+            <Image
+              src="/esewa.png"
+              alt="esewa"
+              width={104}
+              height={40}
+              className="object-contain"
+            />
+
+            <Image
+              src="/khalti.png"
+              alt="khalti"
+              width={104}
+              height={40}
+              className="object-contain"
+            />
           </div>
         </div>
         <div className="space-y-3">

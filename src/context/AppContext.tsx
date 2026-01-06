@@ -1,13 +1,15 @@
 "use client";
 
-import { TicketInfo } from "@/components/movie-section/MyBooking";
-import getUser from "@/hooks/getUser";
+import { useUser } from "@/hooks/getUser";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface AppContextIF {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   shows: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   favouriteMovies: any[];
   image_base_url: string;
   fetchFavouriteMovies: () => void;
@@ -29,7 +31,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const image_base_url = process.env.NEXT_PUBLIC_TMDB_IMAGE_BASE_URL!;
 
-  const user = getUser();
+  const user = useUser();
   const fetchShows = async () => {
     try {
       const response = await fetch(`/api/shows`);

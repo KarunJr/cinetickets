@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 // Route to getOccupiedSeats of the show
 export async function GET(
   req: Request,
-  { params }: { params: { showId: string } }
+  { params }: { params: Promise<{ showId: string }> }
 ) {
   try {
     const { showId } = await params;
@@ -27,14 +27,13 @@ export async function GET(
           message: result.message,
           showPrice: result.showPrice,
         },
-        { status: 400 }
+        { status: 200 }
       );
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.log("GET error in /api/bookings/: ", error);
-    return NextResponse.json(
-      { success: false, message: "Internal server error!" },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Internal server error!";
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }

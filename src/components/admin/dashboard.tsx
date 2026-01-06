@@ -7,7 +7,6 @@ import {
   PlayCircleIcon,
   UserIcon,
 } from "lucide-react";
-import { dummyDashboardData } from "@/assets/assets";
 import { Movie } from "../movie-section/MovieGallery";
 import Title from "./title";
 import { font } from "@/lib/font";
@@ -16,6 +15,7 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import { fullDateFormat } from "@/lib/timeFormat";
 import { useAppContext } from "@/context/AppContext";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface ActiveShows {
   _id: string;
@@ -87,8 +87,9 @@ const Dashboard = () => {
       } else {
         toast.error(data.message);
       }
-    } catch (error: any) {
-      toast.error("Error fetching dashboard data:", error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Error fetching dashboard data";
+      toast.error(message);
     }
   };
 
@@ -128,10 +129,18 @@ const Dashboard = () => {
               className="border rounded-xl space-y-2 cursor-pointer"
               key={index}
             >
-              <img
+              {/* <img
                 src={image_base_url + shows.movie.poster_path}
                 alt="poster"
                 className="h-80 md:h-92 w-full object-cover rounded-t-xl"
+              /> */}
+
+              <Image
+                src={image_base_url + shows.movie.poster_path}
+                alt="poster"
+                layout="fill" // This will make the image fill the parent container (relative positioning)
+                objectFit="cover" // Ensures the image covers the container without distortion
+                className="rounded-t-xl"
               />
               <p className="text-xl font-semibold px-3">{shows.movie.title}</p>
               <div className="flex  justify-between px-3 ">

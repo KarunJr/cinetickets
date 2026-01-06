@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Movie,
   MovieGallery,
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import DateSelect, {
   DateTimeData,
 } from "@/components/movie-section/DateSelect";
+import Image from "next/image";
 import Loading from "@/components/loading";
 import { useAppContext } from "@/context/AppContext";
 import { toast } from "sonner";
@@ -52,7 +53,7 @@ const MoviesDetails = () => {
     }
   };
 
-  const getShow = async () => {
+  const getShow = useCallback(async () => {
     try {
       const response = await fetch(`/api/shows/${id}`);
       const data = await response.json();
@@ -67,7 +68,23 @@ const MoviesDetails = () => {
     } catch (error) {
       console.error("Error in getShow(): ", error);
     }
-  };
+  }, [id])
+  // const getShow = async () => {
+  //   try {
+  //     const response = await fetch(`/api/shows/${id}`);
+  //     const data = await response.json();
+  //     console.log("Here the show is:", data.show);
+
+  //     if (data.success) {
+  //       setShow(data.show);
+  //       setShowDateTime(data.showDateTime);
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in getShow(): ", error);
+  //   }
+  // };
 
   const handleFavourite = async () => {
     try {
@@ -139,7 +156,7 @@ const MoviesDetails = () => {
   }
   useEffect(() => {
     getShow();
-  }, [id]);
+  }, [getShow]);
 
   return show ? (
     <>
@@ -166,10 +183,19 @@ const MoviesDetails = () => {
         <div className="flex flex-col md:flex-row gap-8">
           {/* Image Section */}
           <div className="p-2 mx-auto">
-            <img
+            {/* <img
               src={image_base_url + show.poster_path}
               alt=""
               className="h-96 max-w-70 object-cover rounded-md shadow-xl"
+            /> */}
+
+            <Image
+              src={image_base_url + show.poster_path}
+              alt="Movie poster"
+              width={280}
+              height={384}
+              className="rounded-md shadow-xl object-cover"
+              priority
             />
           </div>
 
@@ -233,10 +259,18 @@ const MoviesDetails = () => {
                 key={index}
                 className="flex flex-shrink-0 flex-col items-center"
               >
-                <img
+                {/* <img
                   src={image_base_url + cast.profile_path}
                   alt={cast.name}
                   className="rounded-full w-20 h-20 object-cover"
+                /> */}
+
+                <Image
+                  src={image_base_url + cast.profile_path}
+                  alt={cast.name}
+                  width={80}
+                  height={80}
+                  className="rounded-full object-cover"
                 />
                 <span className="text-xs font-bold mt-1">{cast.name}</span>
               </div>

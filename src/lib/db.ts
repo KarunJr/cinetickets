@@ -18,10 +18,15 @@ export async function connectToDatabase() {
   }
 
   if (!cached.promise) {
-    mongoose.connect(MONGODB_URI).then(() => {
-      mongoose.connection;
+    cached.promise = mongoose.connect(MONGODB_URI).then(() => {
+      return mongoose.connection;
     });
   }
+  // if (!cached.promise) {
+  //   mongoose.connect(MONGODB_URI).then(() => {
+  //     mongoose.connection;
+  //   });
+  // }
 
   try {
     cached.conn = await cached.promise;

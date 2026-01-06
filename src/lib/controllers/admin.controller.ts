@@ -41,11 +41,13 @@ export const getDashboardData = async (): Promise<GetDashboardDataReturn> => {
     };
 
     return { success: true, message: "Data received", dashboardData };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong!";
     console.log("Error in getDashboardData():", error);
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };
@@ -67,11 +69,13 @@ export const getAllShows = async (): Promise<GetAllShowsReturn> => {
       // shows: shows
       shows,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong!";
     console.error("Error in admin getAllShows(): ", error);
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };
@@ -90,7 +94,7 @@ export const getAllBookings = async (): Promise<GetAllBookings> => {
         populate: { path: "movie" },
       })
       .sort({ createdAt: -1 });
-      
+
     if (bookings.length === 0) {
       return {
         success: false,
@@ -102,11 +106,13 @@ export const getAllBookings = async (): Promise<GetAllBookings> => {
       message: "All booking are fetched",
       bookings: bookings,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong!";
     console.error("Error in admin getAllBookings(): ", error);
     return {
       success: false,
-      message: error.message || "Something went wrong!",
+      message,
     };
   }
 };

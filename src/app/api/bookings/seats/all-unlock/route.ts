@@ -3,7 +3,7 @@ import { redis } from "@/lib/redis";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const session: Session | null = await auth();
     if (!session) {
@@ -24,10 +24,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true, message: "All seats unlocked." });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("GET error /api/bookings/seats/all-unlock:", error);
+    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message: error.message || "Something went wrong!" },
+      { success: false, message },
       { status: 500 }
     );
   }

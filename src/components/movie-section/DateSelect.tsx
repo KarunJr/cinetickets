@@ -1,4 +1,3 @@
-import { dummyDateTimeData } from "@/assets/assets";
 import { font } from "@/lib/font";
 import { ParamValue } from "next/dist/server/request/params";
 import { Button } from "../ui/button";
@@ -6,7 +5,6 @@ import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import Loading from "../loading";
 
 interface showTime {
   time: string;
@@ -44,7 +42,7 @@ const DateSelect = ({ date, id }: DateSelectProps) => {
           <div className="flex items-center gap-3">
             <ChevronLeftIcon className="cursor-pointer" />
             <span className="flex flex-row gap-3">
-              {Object.entries(date).map(([day, time]) => (
+              {Object.entries(date).map(([day]) => (
                 <button
                   className={`flex flex-col text-xm p-2 px-4 cursor-pointer rounded-md transform transition-transform duration-200 ease-linear hover:-translate-y-1 ${
                     selected === day ? "bg-red-500 text-white" : "border"

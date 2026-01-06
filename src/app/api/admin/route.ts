@@ -20,11 +20,12 @@ export async function GET() {
         { status: 400 }
       );
     }
-  } catch (error: any) {
-    console.error("GET /api/admin error:", error);
-    return NextResponse.json(
-      { success: false, message: error.message || "Internal server error!" },
-      { status: 500 }
-    );
-  }
+  } catch (error: unknown) {
+      console.error("GET /api/admin error:", error);
+      const message = error instanceof Error ? error.message : "Internal server error!";
+      return NextResponse.json(
+        { success: false, message },
+        { status: 500 }
+      );
+    }
 }

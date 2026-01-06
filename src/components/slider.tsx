@@ -65,8 +65,8 @@ export const Slider = () => {
         }
         <Swiper navigation={true} modules={[Navigation]}>
           {shows.map((show, index) => (
-            <SwiperSlide>
-              <div key={index} className={`w-full h-70 md:h-120 relative ${font.className}`}>
+            <SwiperSlide key={index}>
+              <div className={`w-full h-70 md:h-120 relative ${font.className}`}>
                 <Image
                   src={image_base_url + show.backdrop_path}
                   alt={show.title}

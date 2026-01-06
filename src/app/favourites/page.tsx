@@ -1,4 +1,3 @@
-import { dummyShowsData } from "@/assets/assets";
 import Favourites from "@/components/movie-section/Favourite";
 import Navbar from "@/components/navbar";
 import { font } from "@/lib/font";
