@@ -1,5 +1,5 @@
 # 🎬 CineTickets - Your Gateway to the Big Screen
-Visit the website: [CineTickets]([https://example.com](https://cinetickets.vercel.app/))
+Visit the website: [CineTickets] https://example.com](https://cinetickets.vercel.app/)
 ## 🖼️ Screenshots
 ![Homepage](./screenshots/CineTicket_HomePage.png)
 ![Movie Details](./screenshots/CineTicket_MovieDetailsPage.png)
