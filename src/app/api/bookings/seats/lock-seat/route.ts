@@ -9,12 +9,20 @@ export async function POST(req: Request) {
     if (!session) {
       return NextResponse.json(
         { success: false, message: "Unauthorized!" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     const { showId, seats, userId } = await req.json();
-
+    if (!redis.isReady) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Booking service is temporarily unavailable.",
+        },
+        { status: 503 },
+      );
+    }
     /**
      * Lock selected seats for a show in Redis.
      *
@@ -50,14 +58,14 @@ export async function POST(req: Request) {
             message:
               "Sorry! The seats you were booking may not be available. Try booking different seats. (#50)",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
 
     return NextResponse.json(
       { success: true, message: "Seat Locked!" },
-      { status: 200 }
+      { status: 200 },
     );
     /*
     console.log("Locked: ", locked);
@@ -79,10 +87,12 @@ export async function POST(req: Request) {
     // });
   } catch (error: unknown) {
     console.error("POST error /api/bookings/seats/lock-seat:", error);
-    const message = error instanceof Error ? error.message : "Internal server error!";
     return NextResponse.json(
-      { success: false, message },
-      { status: 500 }
+      {
+        success: false,
+        message: "Seat booking is temporarily unavailable. Please try again in a moment.",
+      },
+      { status: 503 },
     );
   }
 }

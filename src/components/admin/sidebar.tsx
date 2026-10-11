@@ -43,20 +43,16 @@ const AdminSidebar = async () => {
       className={`${font.className} flex flex-col items-center border-r-4 max-w-13 md:max-w-60 pt-8 w-full border-red-500/30 gap-2 h-[calc(100vh-64px)] mt-12`}
     >
       <div>
-        {/* <img
-          src={user.profile_img || "A"}
-          alt="user"
-          className="rounded-full h-9 md:h-14 w-9 md:w-14 mx-auto"
-        /> */}
-
-        <Image
-          src={user.profile_img || "/avatar.png"}
-          alt="user"
-          fill
-          className="rounded-full object-cover"
-          sizes="56px"
-          priority
-        />
+        <div className="relative mx-auto h-9 w-9 md:h-14 md:w-14">
+          <Image
+            src={user.profile_img || "/defaultuser.jpg"}
+            alt="user"
+            fill
+            className="rounded-full object-cover"
+            sizes="(max-width: 768px) 36px, 56px"
+            priority
+          />
+        </div>
         <p className="font-normal text-base max-md:hidden my-3">
           {user.firstname}
         </p>

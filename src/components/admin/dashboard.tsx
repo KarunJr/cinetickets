@@ -88,7 +88,10 @@ const Dashboard = () => {
         toast.error(data.message);
       }
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Error fetching dashboard data";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Error fetching dashboard data";
       toast.error(message);
     }
   };
@@ -129,18 +132,13 @@ const Dashboard = () => {
               className="border rounded-xl space-y-2 cursor-pointer"
               key={index}
             >
-              {/* <img
-                src={image_base_url + shows.movie.poster_path}
-                alt="poster"
-                className="h-80 md:h-92 w-full object-cover rounded-t-xl"
-              /> */}
-
               <Image
                 src={image_base_url + shows.movie.poster_path}
                 alt="poster"
-                layout="fill" // This will make the image fill the parent container (relative positioning)
-                objectFit="cover" // Ensures the image covers the container without distortion
-                className="rounded-t-xl"
+                className="h-auto w-full rounded-t-xl object-cover brightness-90"
+                width={500}
+                height={750}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
               <p className="text-xl font-semibold px-3">{shows.movie.title}</p>
               <div className="flex  justify-between px-3 ">
