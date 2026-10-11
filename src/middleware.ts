@@ -23,7 +23,11 @@ interface TokenIF {
 const { auth } = NextAuth(authConfig);
 export default auth(async function middleware(req) {
   const { nextUrl } = req;
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: nextUrl.protocol === "https:",
+  });
   const isLoggedIn = !!token;
   // const isLoggedIn = !!req.auth;
 
