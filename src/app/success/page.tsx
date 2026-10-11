@@ -3,7 +3,7 @@ import { PaymentInfoIF } from "@/components/payment/SuccessResult";
 import { connectToDatabase } from "@/lib/db";
 import Booking, { Status } from "@/models/booking.model";
 import Show from "@/models/show.model";
-import { redis } from "@/lib/redis";
+import { redis, redisConnection } from "@/lib/redis";
 import PaymentStatus from "@/components/movie-section/PaymentStatus";
 import { auth } from "@/auth";
 
@@ -41,6 +41,7 @@ export default async function SuccessPage({ searchParams }: { searchParams: Prom
       return redirect("/")
     }
 
+    await redisConnection;
     // Check the user pays the amount within the sessison:
     for (const seat of booking.bookedSeats) {
       const lockedBy = await redis.get(`show:${booking.show}:seat:${seat}`)

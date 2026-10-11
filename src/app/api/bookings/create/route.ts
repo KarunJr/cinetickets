@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { createBooking } from "@/lib/controllers/booking.controller";
 import type { Session } from "next-auth";
-import { redis } from "@/lib/redis";
+import { redis, redisConnection } from "@/lib/redis";
 // Route to create booking by the user
 
 export async function POST(req: Request) {
@@ -27,6 +27,7 @@ export async function POST(req: Request) {
     console.log("Selected seats are:", selectedSeats);
 
     // Check seats selected by user are locked by him or not?
+    await redisConnection;
     for (const seat of selectedSeats) {
       const key = await redis.get(`show:${showId}:seat:${seat}`);
 

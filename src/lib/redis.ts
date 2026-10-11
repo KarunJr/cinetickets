@@ -32,8 +32,12 @@ redis.on("error", (err) => console.log("Redis Client Error", err));
 
 // Keep the app/API routes available when Redis is temporarily unreachable so
 // they can return a useful response instead of failing during module loading.
-if (!redis.isOpen) {
-  redis.connect().catch((error: unknown) => {
-    console.error("Redis connection failed:", error);
-  });
-}
+export const redisConnection = !redis.isOpen
+  ? redis
+      .connect()
+      .then(() => true)
+      .catch((error: unknown) => {
+        console.error("Redis connection failed:", error);
+        return false;
+      })
+  : Promise.resolve(redis.isReady);

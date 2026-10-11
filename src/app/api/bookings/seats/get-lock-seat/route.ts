@@ -1,4 +1,4 @@
-import { redis } from "@/lib/redis";
+import { redis, redisConnection } from "@/lib/redis";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -14,6 +14,7 @@ export async function GET(req: Request) {
       );
     }
 
+    await redisConnection;
     const keys = await redis.keys(`show:${showId}:seat:*`);
     console.log("Keys are:", keys);
     const lockedSeats = keys.map((key) => key.split(":")[3]);

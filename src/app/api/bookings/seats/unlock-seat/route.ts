@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { redis } from "@/lib/redis";
+import { redis, redisConnection } from "@/lib/redis";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -15,6 +15,7 @@ export async function POST(req: Request) {
 
     const { showId, seats, userId } = await req.json();
 
+    await redisConnection;
     const unlockedSeats = [];
     for (const seat of seats) {
       const key = `show:${showId}:seat:${seat}`;

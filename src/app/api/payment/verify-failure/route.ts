@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
-import { redis } from "@/lib/redis";
+import { redis, redisConnection } from "@/lib/redis";
 import Booking, { Status } from "@/models/booking.model";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const { tuuid } = await req.json();
     console.log("User is:", session.user.id);
 
+    await redisConnection;
     await connectToDatabase();
 
     const booking = await Booking.findOne({

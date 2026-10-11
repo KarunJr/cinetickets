@@ -1,8 +1,9 @@
-import { redis } from "@/lib/redis";
+import { redis, redisConnection } from "@/lib/redis";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    await redisConnection;
     const result = await redis.ping();
     return NextResponse.json(
       {

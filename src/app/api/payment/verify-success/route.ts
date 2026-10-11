@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
-import { redis } from "@/lib/redis";
+import { redis, redisConnection } from "@/lib/redis";
 import Booking, { Status } from "@/models/booking.model";
 import Show from "@/models/show.model";
 import { NextResponse } from "next/server";
@@ -24,6 +24,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
 
+    await redisConnection;
     await connectToDatabase();
 
     const booking = await Booking.findOne({

@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { redis } from "@/lib/redis";
+import { redis, redisConnection } from "@/lib/redis";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -12,7 +12,8 @@ export async function POST() {
         { status: 401 }
       );
     }
-    
+
+    await redisConnection;
     const keys = await redis.keys("show:*:seat:*");
 
     for (const key of keys) {
