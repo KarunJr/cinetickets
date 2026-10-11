@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import { font } from "@/lib/font";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { selectedTime } from "@/app/movies/[id]/[date]/page";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext";
 import { v4 as uuidv4 } from "uuid";
@@ -35,6 +35,8 @@ const EsewaDialog = ({
   const [error, setError] = useState("");
   const [errorDialog, setErrorDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submittingPayment, setSubmittingPayment] = useState(false);
+  const paymentSubmissionInProgress = useRef(false);
   const { user } = useAppContext();
   const amount = selectedSeats.length * showPrice;
   const transactionUuid = `${Date.now()}-${uuidv4()}`;
@@ -77,7 +79,11 @@ const EsewaDialog = ({
         return;
       }
     } catch (error) {
-      console.error("Error in validateField():", error);
+      console.error("Error locking seats:", error);
+      toast.error(
+        "Seat booking is temporarily unavailable. Please try again in a moment.",
+        { position: "bottom-right" },
+      );
     } finally {
       setLoading(false);
     }
@@ -118,6 +124,7 @@ const EsewaDialog = ({
   // 3. MongoDB automatically deletes the 'Failed' booking record after 5 minutes.
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (paymentSubmissionInProgress.current) return;
     if (!user) {
       return toast.error("Please login to proceed", {
         position: "bottom-right",
@@ -128,12 +135,17 @@ const EsewaDialog = ({
         position: "bottom-right",
       });
     }
-    console.log("Show:", { showId: selectedTime.showId, selectedSeats: selectedSeats, transactionUuid: transactionUuid, amount: amount });
+    paymentSubmissionInProgress.current = true;
+    setSubmittingPayment(true);
 
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("redirectingToEsewa", "true")
-    }
+    console.log("Show:", {
+      showId: selectedTime.showId,
+      selectedSeats: selectedSeats,
+      transactionUuid: transactionUuid,
+      amount: amount,
+    });
 
+    let redirectingToEsewa = false;
     try {
       const response = await fetch("/api/bookings/create", {
         method: "POST",
@@ -149,19 +161,12 @@ const EsewaDialog = ({
       });
       const data = await response.json();
 
-      if (data.success) {
-        toast.success(data.message)
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Could not create your booking.");
       }
-    } catch (error) {
-      console.error("Error in bookTickets():", error);
-      return;
-    }
+      toast.success(data.message);
 
-    //To call the Esewa API and redirect user to payment screen
-    try {
-      e.preventDefault();
-
-      const response = await fetch("/api/initiate-payment", {
+      const paymentResponse = await fetch("/api/initiate-payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -174,28 +179,38 @@ const EsewaDialog = ({
           seats: selectedSeats,
         }),
       });
-      const data = await response.json();
-      console.log("I am here");
+      const paymentData = await paymentResponse.json();
 
-      if (data.success && data.esewaConfig) {
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
-        Object.entries(data.esewaConfig).forEach(([key, value]) => {
-          const input = document.createElement("input");
-          input.type = "hidden";
-          input.name = key;
-          input.value = String(value);
-          form.appendChild(input);
-        });
-        document.body.appendChild(form);
-        form.submit();
-      } else {
+      if (!paymentResponse.ok || !paymentData.success || !paymentData.esewaConfig) {
         setSelectedSeats([]);
-        return toast.message(data.message);
+        throw new Error(paymentData.message || "Could not start eSewa payment.");
       }
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+      Object.entries(paymentData.esewaConfig).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = String(value);
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      sessionStorage.setItem("redirectingToEsewa", "true");
+      redirectingToEsewa = true;
+      form.submit();
     } catch (error) {
       console.error("Error in handlePayment():", error);
+      toast.error(
+        error instanceof Error ? error.message : "Could not start payment. Please try again.",
+        { position: "bottom-right" },
+      );
+    } finally {
+      if (!redirectingToEsewa) {
+        paymentSubmissionInProgress.current = false;
+        setSubmittingPayment(false);
+      }
     }
   };
 
@@ -256,6 +271,8 @@ const EsewaDialog = ({
                   className="py-9 cursor-pointer border rounded-md border-black transition-opacity duration-200 ease-in  sm:opacity-80 hover:opacity-100"
                   variant={"show"}
                   type="submit"
+                  disabled={submittingPayment}
+                  aria-busy={submittingPayment}
                 >
                   {/* <img src="/esewa.png" alt="esewa" className="max-w-30" /> */}
                   <Image
@@ -265,6 +282,7 @@ const EsewaDialog = ({
                     height={40}
                     className="object-contain"
                   />
+                  {submittingPayment && <span className="sr-only">Processing payment</span>}
                 </Button>
               </form>
             </div>
