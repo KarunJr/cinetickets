@@ -26,7 +26,7 @@
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "framer-motion": "^12.23.12",
-    "inngest": "^3.44.3",
+    "inngest": "^3.54.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.536.0",
     "mongoose": "^8.17.0",
