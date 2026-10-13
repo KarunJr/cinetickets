@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import PaymentStatus from "@/components/movie-section/PaymentStatus";
 import { connectToDatabase } from "@/lib/db";
-import { redis, redisConnection } from "@/lib/redis";
+import { connectRedis, redis } from "@/lib/redis";
 import Booking, { Status } from "@/models/booking.model";
 import { Session } from "next-auth";
 import { redirect } from "next/navigation";
@@ -25,7 +25,7 @@ export default async function FailurePage({ searchParams }: { searchParams: Prom
 
   if (!booking) redirect("/");
 
-  await redisConnection;
+  await connectRedis();
   if (reason === "session_expired" || "session_taken") {
     booking.status = Status.LATE_PAYMENT
     await booking.save();
