@@ -9,7 +9,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./.env.local
+      - ./.env.docker.dev
     environment:
       INNGEST_DEV: "1"
       INNGEST_BASE_URL: http://inngest:8288
