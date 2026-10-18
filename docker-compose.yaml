@@ -1,0 +1,81 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_BASE_URL: http://localhost:3000
+        NEXT_PUBLIC_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p/original 
+    container_name: cineticket-dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env.docker.dev
+    environment:
+      INNGEST_DEV: "1"
+      INNGEST_BASE_URL: http://inngest:8288
+    depends_on:
+      mongo:
+        condition: service_healthy
+      
+      redis:
+        condition: service_healthy
+
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/inngest').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+  
+  mongo:
+    image: mongo:7
+    container_name: mongodb-dev
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+  
+  redis:
+    image: redis:7-alpine
+    container_name: redis-dev
+    restart: always
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+  
+  inngest:
+    image: inngest/inngest
+    container_name: inngest-dev
+    command: ["inngest", "start", "--sdk-url", "http://web:3000/api/inngest"]
+    ports:
+      - "8288:8288"
+      - "8289:8289"
+    restart: always
+    env_file:
+      - ./.env.local
+    depends_on:
+      web:
+        condition: service_healthy
+  
+volumes:
+  mongo-data:
+  redis-data:

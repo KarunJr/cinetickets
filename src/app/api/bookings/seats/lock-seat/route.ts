@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { redis, redisConnection } from "@/lib/redis";
+import { connectRedis, redis } from "@/lib/redis";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     }
 
     const { showId, seats, userId } = await req.json();
-    await redisConnection;
+    await connectRedis();
     if (!redis.isReady) {
       return NextResponse.json(
         {

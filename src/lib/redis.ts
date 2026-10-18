@@ -30,14 +30,20 @@ export const redis = createClient({
 });
 redis.on("error", (err) => console.log("Redis Client Error", err));
 
-// Keep the app/API routes available when Redis is temporarily unreachable so
-// they can return a useful response instead of failing during module loading.
-export const redisConnection = !redis.isOpen
-  ? redis
+let connection: Promise<boolean> | undefined;
+
+// Connect on demand so importing a route during `next build` doesn't contact Redis.
+export function connectRedis(): Promise<boolean> {
+  if (redis.isReady) return Promise.resolve(true);
+  if (!connection) {
+    connection = redis
       .connect()
       .then(() => true)
       .catch((error: unknown) => {
         console.error("Redis connection failed:", error);
+        connection = undefined;
         return false;
-      })
-  : Promise.resolve(redis.isReady);
+      });
+  }
+  return connection;
+}

@@ -1,6 +1,6 @@
 "use server";
 import { generateEsewaSignature } from "@/lib/generate-signature";
-import { redis, redisConnection } from "@/lib/redis";
+import { connectRedis, redis } from "@/lib/redis";
 import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       );
     }
 
-    await redisConnection;
+    await connectRedis();
     for (const seat of seats) {
       const key = await redis.get(`show:${showId}:seat:${seat}`);
 
