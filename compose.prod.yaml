@@ -1,20 +1,26 @@
 services:
   nginx:
     image: nginx:1.27-alpine
-    ports:
-      - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       web:
         condition: service_healthy
     restart: unless-stopped
+
+  ngrok:
+    image: ngrok/ngrok:3.39.11-alpine
+    depends_on:
+      - nginx
+    command: 
+      - "http"
+      - "nginx:80"
+      - "--url=multiply-oversized-ceramics.ngrok-free.dev"
+    env_file:
+      - ./.env.docker.prod
+
   web:
-    build:
-      args:
-        NEXT_PUBLIC_BASE_URL: http://192.168.1.216
-        NEXT_PUBLIC_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p/original
-      context: .
+    image: ghcr.io/karunjr/cinetickets:${IMAGE_TAG}
     env_file:
       - ./.env.docker.prod
     environment:
@@ -39,9 +45,6 @@ services:
     env_file:
       - ./.env.docker.prod
     command: ["inngest", "start", "--sdk-url", "http://web:3000/api/inngest"]
-    ports:
-      - "8288:8288"
-      - "8289:8289"
     depends_on:
       web:
         condition: service_healthy

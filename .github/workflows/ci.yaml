@@ -45,3 +45,11 @@ jobs:
           build-args: |
             NEXT_PUBLIC_BASE_URL=${{vars.NEXT_PUBLIC_BASE_URL}}
             NEXT_PUBLIC_TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p/original
+        
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{secrets.DEPLOY_DISPATCH_TOKEN}}
+          repository: KarunJr/cinetickets-private-cd
+          event-type: deploy_now
+          client-payload: '{"public_sha": "${{ github.sha }}"}'
