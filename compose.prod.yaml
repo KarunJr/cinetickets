@@ -18,6 +18,7 @@ services:
       - "--url=multiply-oversized-ceramics.ngrok-free.dev"
     env_file:
       - ./.env.docker.prod
+    restart: unless-stopped
 
   web:
     image: ghcr.io/karunjr/cinetickets:${IMAGE_TAG}
