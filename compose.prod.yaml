@@ -27,6 +27,7 @@ services:
     environment:
       INNGEST_DEV: "0"
       INNGEST_BASE_URL: http://inngest:8288
+      AUTH_URL: "https://multiply-oversized-ceramics.ngrok-free.dev"
     healthcheck:
       test:
         [
