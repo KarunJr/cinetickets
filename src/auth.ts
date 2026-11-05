@@ -3,7 +3,6 @@ import type { NextRequest } from "next/server";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { ObjectId } from "mongoose";
 import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
 import authConfig from "@/auth.config";
 import { connectToDatabase } from "@/lib/db";
 import { getMongoClient } from "@/lib/mongoClient";
