@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: "node",
       env,
+      include: ["./test/**/*.test.ts"],
     },
   };
 });
